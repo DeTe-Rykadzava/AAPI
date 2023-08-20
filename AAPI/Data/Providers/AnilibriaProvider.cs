@@ -16,13 +16,13 @@ public class AnilibriaProvider : IAnimeProvider
     public string ProviderIcon { get; set; }
 
     // provider settings 
-    private string host = "https://api.anilibria.tv/v3/";
-    private string postershost = "https://anilibria.tv/";
-    private string videohost = "https://cache.libria.fun";
+    private readonly string _host = "https://api.anilibria.tv/v3";
+    private readonly string _postersHost = "https://anilibria.tv";
+    private readonly string _videoHost = "https://cache.libria.fun";
 
     public async Task<List<LastUpdatesDto>> GetLastUpdate()
     {
-        var response = await WebClientConfig.WebClient.GetAsync("https://api.anilibria.tv/v3/title/updates?limit=30&playlist_type=array&filter=code,names,franchises[*].releases[*].code,franchises[*].releases[*].names,posters.medium.url,type.full_string,genres,season.year,description,player.host,player.episodes.string,player.list[*].name,player.list[*].preview,player.list[*].hls.sd,player.list[*].hls.hd");
+        var response = await WebClientConfig.WebClient.GetAsync($"{_host}/title/updates?limit=30&playlist_type=array&filter=code,names,franchises[*].releases[*].code,franchises[*].releases[*].names,posters.medium.url,type.full_string,genres,season.year,description,player.host,player.episodes.string,player.list[*].name,player.list[*].preview,player.list[*].hls.sd,player.list[*].hls.hd");
 
         if (!response.IsSuccessStatusCode)
             throw new Exception("Problem with getting data");
@@ -34,8 +34,24 @@ public class AnilibriaProvider : IAnimeProvider
             throw new Exception("Problem with parse data");
 
         var lastUpdates = lastUpdatesList.Deserialize<List<LastUpdatesDto>>();
-        
-        return lastUpdates;
+
+        if (lastUpdates != null)
+        {
+            foreach (var lastUpdate in lastUpdates)
+            {
+                lastUpdate.posters.medium.url = _postersHost + lastUpdate.posters.medium.url;
+                foreach (var seria in lastUpdate.player.list)
+                {
+                    seria.preview = _postersHost + seria.preview;
+                    seria.hls.hd = _videoHost + seria.hls.hd;
+                    seria.hls.sd = _videoHost + seria.hls.sd;
+                }
+            }
+
+            return lastUpdates;
+        }
+
+        throw new Exception("Do not have data");
     }
 
     public async Task<string> Search()
