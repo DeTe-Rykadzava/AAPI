@@ -20,7 +20,7 @@ public class AnilibriaProvider : IAnimeProvider
     private readonly string _postersHost = "https://anilibria.tv";
     private readonly string _videoHost = "https://cache.libria.fun";
 
-    public async Task<List<LastUpdatesDto>> GetLastUpdate()
+    public async Task<List<AnimeTitleDto>> GetLastUpdate()
     {
         var response = await WebClientConfig.WebClient.GetAsync($"{_host}/title/updates?limit=30&playlist_type=array&filter=code,names,franchises[*].releases[*].code,franchises[*].releases[*].names,posters.medium.url,type.full_string,genres,season.year,description,player.host,player.episodes.string,player.list[*].name,player.list[*].preview,player.list[*].hls.sd,player.list[*].hls.hd");
 
@@ -33,7 +33,7 @@ public class AnilibriaProvider : IAnimeProvider
         if (lastUpdatesList == null)
             throw new Exception("Problem with parse data");
 
-        var lastUpdates = lastUpdatesList.Deserialize<List<LastUpdatesDto>>();
+        var lastUpdates = lastUpdatesList.Deserialize<List<AnimeTitleDto>>();
 
         if (lastUpdates != null)
         {
@@ -54,8 +54,8 @@ public class AnilibriaProvider : IAnimeProvider
         throw new Exception("Do not have data");
     }
 
-    public async Task<string> Search()
+    public async Task<AnimeTitleDto> Search(string search)
     {
-        return "";
+        return new AnimeTitleDto();
     }
 }

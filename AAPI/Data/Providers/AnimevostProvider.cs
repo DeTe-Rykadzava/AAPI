@@ -7,13 +7,13 @@ public class AnimevostProvider : IAnimeProvider
     public int ProviderId { get; set; }
     public string ProviderName { get; set; }
     public string ProviderIcon { get; set; }
-    public async Task<List<LastUpdatesDto>> GetLastUpdate()
+    public async Task<List<AnimeTitleDto>> GetLastUpdate()
     {
-        return new List<LastUpdatesDto>();
+        return new List<AnimeTitleDto>();
     }
 
-    public async Task<string> Search()
+    public async Task<AnimeTitleDto> Search(string search)
     {
-        return "";
+        return new AnimeTitleDto();
     }
 }

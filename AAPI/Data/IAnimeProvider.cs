@@ -7,6 +7,6 @@ public interface IAnimeProvider
     public int ProviderId { get; set; }
     public string ProviderName { get; set; }
     public string ProviderIcon { get; set; }
-    public Task<List<LastUpdatesDto>> GetLastUpdate();
-    public Task<string> Search();
+    public Task<List<AnimeTitleDto>> GetLastUpdate();
+    public Task<AnimeTitleDto> Search(string search);
 }

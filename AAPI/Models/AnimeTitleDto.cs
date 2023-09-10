@@ -54,7 +54,7 @@ public class Release
     public Names names { get; set; }
 }
 
-public class LastUpdatesDto
+public class AnimeTitleDto
 {
     public string code { get; set; }
     public Names names { get; set; }
