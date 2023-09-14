@@ -19,4 +19,22 @@
       </Content>
     </ItemGroup>
 
+
+    <ItemGroup>
+      <None Remove="Resources\Animevost.png" />
+      <EmbeddedResource Include="Resources\Animevost.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="Resources\Anilibria.png" />
+      <EmbeddedResource Include="Resources\Anilibria.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
+
+
+
+
+
+
 </Project>

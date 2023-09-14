@@ -1,11 +1,16 @@
+using System.Reflection;
+using System.Resources;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using AAPI.Config;
 using AAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 namespace AAPI.Data.Providers;
 
@@ -13,12 +18,34 @@ public class AnilibriaProvider : IAnimeProvider
 {
     public int ProviderId { get; set; }
     public string ProviderName { get; set; }
-    public string ProviderIcon { get; set; }
+
+    [JsonIgnore]
+    public string ProviderIconPath { get; set; }
+
+    public AnilibriaProvider(int id, string Name, string iconAssemblyPath)
+    {
+        ProviderId = id;
+        ProviderName = Name;
+        ProviderIconPath = iconAssemblyPath;
+    }
+    
 
     // provider settings 
     private readonly string _host = "https://api.anilibria.tv/v3";
     private readonly string _postersHost = "https://anilibria.tv";
     private readonly string _videoHost = "https://cache.libria.fun";
+
+    public async Task<Stream> GetProviderIcon()
+    {
+        // Determine path
+        var assembly = Assembly.GetExecutingAssembly();
+        string resourcePath = assembly.GetManifestResourceNames()
+                .Single(str => str.EndsWith(ProviderIconPath));
+        
+        Stream stream = assembly.GetManifestResourceStream(resourcePath);
+
+        return stream;
+    }
 
     public async Task<List<AnimeTitleDto>> GetLastUpdate()
     {
